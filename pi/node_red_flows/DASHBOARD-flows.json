@@ -1,0 +1,190 @@
+[
+    {
+        "id": "fffbd0aea1071bb9",
+        "type": "tab",
+        "label": "Dashboard Flow",
+        "disabled": false,
+        "info": "",
+        "env": []
+    },
+    {
+        "id": "891f82ba3667aaba",
+        "type": "ui_dropdown",
+        "z": "fffbd0aea1071bb9",
+        "name": "",
+        "label": "Select Voice",
+        "tooltip": "",
+        "place": "Select option",
+        "group": "18d107284d4ef721",
+        "order": 1,
+        "width": 0,
+        "height": 0,
+        "passthru": true,
+        "multiple": false,
+        "options": [
+            {
+                "label": "Amy",
+                "value": "amy",
+                "type": "str"
+            },
+            {
+                "label": "Joe",
+                "value": "joe",
+                "type": "str"
+            },
+            {
+                "label": "Kathleen",
+                "value": "kathleen",
+                "type": "str"
+            },
+            {
+                "label": "Kristin",
+                "value": "kristin",
+                "type": "str"
+            },
+            {
+                "label": "Lessac",
+                "value": "lessac",
+                "type": "str"
+            },
+            {
+                "label": "Libritts",
+                "value": "libritts",
+                "type": "str"
+            },
+            {
+                "label": "Libritts_r",
+                "value": "libritts_r",
+                "type": "str"
+            },
+            {
+                "label": "Norman",
+                "value": "norman",
+                "type": "str"
+            }
+        ],
+        "payload": "",
+        "topic": "voice",
+        "topicType": "msg",
+        "className": "",
+        "x": 190,
+        "y": 220,
+        "wires": [
+            [
+                "816449e1d494e769"
+            ]
+        ]
+    },
+    {
+        "id": "816449e1d494e769",
+        "type": "mqtt out",
+        "z": "fffbd0aea1071bb9",
+        "name": "",
+        "topic": "nomadpuddy/voice_selection",
+        "qos": "",
+        "retain": "",
+        "respTopic": "",
+        "contentType": "",
+        "userProps": "",
+        "correl": "",
+        "expiry": "",
+        "broker": "4a3fe1a11db06e6e",
+        "x": 460,
+        "y": 220,
+        "wires": []
+    },
+    {
+        "id": "ce2ce377f2750d2a",
+        "type": "ui_text_input",
+        "z": "fffbd0aea1071bb9",
+        "name": "",
+        "label": "Prompt for the LLM",
+        "tooltip": "",
+        "group": "18d107284d4ef721",
+        "order": 2,
+        "width": 0,
+        "height": 0,
+        "passthru": true,
+        "mode": "text",
+        "delay": "0",
+        "topic": "prompt",
+        "sendOnBlur": false,
+        "className": "",
+        "topicType": "msg",
+        "x": 170,
+        "y": 300,
+        "wires": [
+            [
+                "bf65f7106823231c"
+            ]
+        ]
+    },
+    {
+        "id": "bf65f7106823231c",
+        "type": "mqtt out",
+        "z": "fffbd0aea1071bb9",
+        "name": "",
+        "topic": "llm/input",
+        "qos": "",
+        "retain": "",
+        "respTopic": "",
+        "contentType": "",
+        "userProps": "",
+        "correl": "",
+        "expiry": "",
+        "broker": "4a3fe1a11db06e6e",
+        "x": 440,
+        "y": 300,
+        "wires": []
+    },
+    {
+        "id": "18d107284d4ef721",
+        "type": "ui_group",
+        "name": "Default",
+        "tab": "459fe108f8c72bdc",
+        "order": 1,
+        "disp": true,
+        "width": "6",
+        "collapse": false,
+        "className": ""
+    },
+    {
+        "id": "4a3fe1a11db06e6e",
+        "type": "mqtt-broker",
+        "name": "Puddy_MQTT",
+        "broker": "localhost",
+        "port": "1883",
+        "clientid": "",
+        "autoConnect": true,
+        "usetls": false,
+        "protocolVersion": "4",
+        "keepalive": "60",
+        "cleansession": true,
+        "autoUnsubscribe": true,
+        "birthTopic": "",
+        "birthQos": "0",
+        "birthRetain": "false",
+        "birthPayload": "",
+        "birthMsg": {},
+        "closeTopic": "",
+        "closeQos": "0",
+        "closeRetain": "false",
+        "closePayload": "",
+        "closeMsg": {},
+        "willTopic": "",
+        "willQos": "0",
+        "willRetain": "false",
+        "willPayload": "",
+        "willMsg": {},
+        "userProps": "",
+        "sessionExpiry": ""
+    },
+    {
+        "id": "459fe108f8c72bdc",
+        "type": "ui_tab",
+        "name": "PuddyRobotDashboardControl",
+        "icon": "dashboard",
+        "disabled": false,
+        "hidden": false
+    }
+]
