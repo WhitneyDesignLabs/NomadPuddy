@@ -1,10 +1,61 @@
+
+"""
+Piper TTS Script for NomadPuddy
+
+This script uses Piper for text-to-speech conversion.
+
+IMPORTANT: Piper voice models should be placed in the ~/piper_models directory.
+Each voice requires two files: a .onnx file and a .onnx.json file.
+Download these from: https://huggingface.co/rhasspy/piper-voices/tree/main/en/en_US
+
+For example, for the 'lessac' voice, you need:
+~/piper_models/en_US-lessac-medium.onnx
+~/piper_models/en_US-lessac-medium.onnx.json
+"""
+
+# Alternate info: Download any voices you want from Piper TTS Github page. Place both the config file and the voice...
+#in a directory of your choice and modify the path below as needed.
+PIPER_VOICES = {
+    "amy": {
+        "model": "/home/scott/piper_models/en_US-amy-medium.onnx",
+        "config": "/home/scott/piper_models/en_en_US_amy_medium_en_US-amy-medium.onnx.json"
+    },
+    "joe": {
+        "model": "/home/scott/piper_models/en_US-joe-medium.onnx",
+        "config": "/home/scott/piper_models/en_en_US_joe_medium_en_US-joe-medium.onnx.json"
+    },
+    "kathleen": {
+        "model": "/home/scott/piper_models/en_US-kathleen-low.onnx",
+        "config": "/home/scott/piper_models/en_en_US_kathleen_low_en_US-kathleen-low.onnx.json"
+    },
+    "kristin": {
+        "model": "/home/scott/piper_models/en_US-kristin-medium.onnx",
+        "config": "/home/scott/piper_models/en_en_US_kristin_medium_en_US-kristin-medium.onnx.json"
+    },
+    "lessac": {
+        "model": "/home/scott/piper_models/en_US-lessac-medium.onnx",
+        "config": "/home/scott/piper_models/en_en_US_lessac_medium_en_US-lessac-medium.onnx.json"
+    },
+    "libritts": {
+        "model": "/home/scott/piper_models/en_US-libritts-high.onnx",
+        "config": "/home/scott/piper_models/en_en_US_libritts_high_en_US-libritts-high.onnx.json"
+    },
+    "libritts_r": {
+        "model": "/home/scott/piper_models/en_US-libritts_r-medium.onnx",
+        "config": "/home/scott/piper_models/en_en_US_libritts_r_medium_en_US-libritts_r-medium.onnx.json"
+    },
+    "norman": {
+        "model": "/home/scott/piper_models/en_US-norman-medium.onnx",
+        "config": "/home/scott/piper_models/en_en_US_norman_medium_en_US-norman-medium.onnx.json"
+    }
+}
 import paho.mqtt.client as mqtt
 import subprocess
 import re
 import os
 import time
 
-MQTT_BROKER = "localhost"
+MQTT_BROKER = "192.168.8.110"
 MQTT_PORT = 1883
 MQTT_TOPIC_OUTPUT = "llm/output"
 MQTT_TOPIC_VOICE = "nomadpuddy/voice_selection"
@@ -13,41 +64,6 @@ MQTT_TOPIC_VOICE = "nomadpuddy/voice_selection"
 LENGTH_SCALE = 1  # 1.0 is normal speed, <1.0 is faster, >1.0 is slower
 SENTENCES_PER_CHUNK = 4
 PAUSE_BETWEEN_CHUNKS = 0.1
-
-PIPER_VOICES = {
-    "amy": {
-        "model": "/home/pi5-1/piper_models/en_US-amy-medium.onnx",
-        "config": "/home/pi5-1/piper_models/en_en_US_amy_medium_en_US-amy-medium.onnx.json"
-    },
-    "joe": {
-        "model": "/home/pi5-1/piper_models/en_US-joe-medium.onnx",
-        "config": "/home/pi5-1/piper_models/en_en_US_joe_medium_en_US-joe-medium.onnx.json"
-    },
-    "kathleen": {
-        "model": "/home/pi5-1/piper_models/en_US-kathleen-low.onnx",
-        "config": "/home/pi5-1/piper_models/en_en_US_kathleen_low_en_US-kathleen-low.onnx.json"
-    },
-    "kristin": {
-        "model": "/home/pi5-1/piper_models/en_US-kristin-medium.onnx",
-        "config": "/home/pi5-1/piper_models/en_en_US_kristin_medium_en_US-kristin-medium.onnx.json"
-    },
-    "lessac": {
-        "model": "/home/pi5-1/piper_models/en_US-lessac-medium.onnx",
-        "config": "/home/pi5-1/piper_models/en_US-lessac-medium.onnx.json"
-    },
-    "libritts": {
-        "model": "/home/pi5-1/piper_models/en_US-libritts-high.onnx",
-        "config": "/home/pi5-1/piper_models/en_en_US_libritts_high_en_US-libritts-high.onnx.json"
-    },
-    "libritts_r": {
-        "model": "/home/pi5-1/piper_models/en_US-libritts_r-medium.onnx",
-        "config": "/home/pi5-1/piper_models/en_en_US_libritts_r_medium_en_US-libritts_r-medium.onnx.json"
-    },
-    "norman": {
-        "model": "/home/pi5-1/piper_models/en_US-norman-medium.onnx",
-        "config": "/home/pi5-1/piper_models/en_en_US_norman_medium_en_US-norman-medium.onnx.json"
-    }
-}
 
 
 DEFAULT_VOICE = "lessac"
