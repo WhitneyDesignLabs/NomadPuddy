@@ -17,7 +17,7 @@ model = model.to("cpu")
 model.eval()
 
 # MQTT setup
-mqtt_broker = "localhost"
+mqtt_broker = "192.168.8.110" #Use the address of the Raspberry Pi or  the MQTT broker
 mqtt_port = 1883
 mqtt_topic = "stt/output"
 
@@ -96,3 +96,5 @@ def main():
 
 if __name__ == "__main__":
     main()
+
+
