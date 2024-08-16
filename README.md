@@ -271,3 +271,118 @@ Nomad Puddy is an AI assistant integrated into a sophisticated robotic system, d
 6. Expansion of system capabilities based on specific needs
 
 This project status represents a significant achievement in creating a voice-interactive AI assistant system using open-source tools and running on local hardware. The system demonstrates the successful integration of various complex components (speech recognition, natural language processing, and speech synthesis) into a cohesive, functional whole.
+
+
+Summary of Achievement: Integration of Real-Time Sensor Data with LLM in Node-RED
+Objective:
+We successfully integrated real-time temperature and humidity data from a DHT11 sensor into an existing Large Language Model (LLM) flow using Node-RED, allowing the AI assistant to provide context-aware responses based on current environmental conditions.
+Hardware Components:
+
+ESP32 microcontroller with DHT11 temperature and humidity sensor
+Raspberry Pi 5 running Node-RED and MQTT broker
+NomadPuddy (IP: 192.168.8.60) running Ollama LLM server
+
+Software Components:
+
+Node-RED for flow control and integration
+MQTT for message passing
+Ollama API for LLM interaction
+
+Implementation Details:
+
+Sensor Data Collection and Transmission:
+
+ESP32 programmed to read DHT11 sensor data periodically
+Data published to MQTT topic: "nomadpuddy/esp32/sensor/dht11"
+Format: JSON object with "temperature" and "humidity" fields
+
+
+Node-RED Flow Enhancement:
+a. New MQTT Input Node:
+
+Topic: "nomadpuddy/esp32/#"
+Listens for incoming sensor data
+
+b. Switch Node:
+
+Condition 1: msg.topic == "nomadpuddy/esp32/sensor/dht11"
+Condition 2: otherwise
+Separates sensor data from other messages
+
+c. Parse DHT11 Data Function:
+
+Processes incoming sensor data
+Updates global variables with latest temperature and humidity
+Function:
+javascriptCopytry {
+    let data = typeof msg.payload === 'string' ? JSON.parse(msg.payload) : msg.payload;
+    global.set('temperature', data.temperature);
+    global.set('humidity', data.humidity);
+    node.warn(`Parsed DHT data - Temp: ${data.temperature}°C, Humidity: ${data.humidity}%`);
+} catch (e) {
+    node.error("Failed to parse DHT data: " + e.message);
+}
+
+
+d. Modified Prepare API Request Function:
+
+Incorporates sensor data into LLM prompts
+Function:
+javascriptCopyconst temperature = global.get('temperature') || 'unavailable';
+const humidity = global.get('humidity') || 'unavailable';
+const customPrompt = `You have access to real-time temperature and humidity data from a DHT11 sensor. 
+The current temperature is ${temperature}°C and the humidity is ${humidity}%. 
+When asked about temperature or humidity, use this real-time data in your response.
+
+User query: `;
+
+if (typeof msg.payload === 'string') {
+    msg.payload = {
+        model: "llama3.1",
+        prompt: customPrompt + msg.payload
+    };
+} else if (msg.payload && msg.payload.prompt) {
+    msg.payload = {
+        model: "llama3.1",
+        prompt: customPrompt + msg.payload.prompt
+    };
+} else {
+    node.warn("Invalid input format");
+    return null;
+}
+
+
+
+LLM Integration:
+
+Maintained existing Ollama API call structure using "/api/generate" endpoint
+Enhanced prompts now include real-time sensor data
+
+
+Flow Structure:
+
+MQTT in (nomadpuddy/esp32/#) → Switch Node
+Switch Node (Condition 1) → Parse DHT11 Data Function
+Switch Node (Condition 2) → Prepare API Request Function
+Existing MQTT inputs (llm/input, stt/output) → Prepare API Request Function
+Prepare API Request Function → Ollama API Call Node
+Ollama API Call Node → Process API Response Function
+Process API Response Function → (Existing output handling)
+
+
+Key Achievements:
+
+Successful integration of IoT sensor data with an AI language model
+Real-time environmental context provided to the LLM for more relevant responses
+Maintained modular structure, allowing for easy expansion to include additional sensors or data sources
+Preserved existing LLM query handling while adding new functionality
+
+Future Expansion Possibilities:
+
+Integration of additional sensors (e.g., light levels, motion detection)
+Implementation of actuator control based on LLM decisions
+Data logging and visualization for long-term analysis
+Advanced prompt engineering to make better use of multiple data sources
+Integration with home automation systems or other IoT devices
+
+This implementation serves as a foundational example for integrating real-world data into AI-driven systems, enhancing the AI's ability to provide context-aware and environmentally-relevant responses.
