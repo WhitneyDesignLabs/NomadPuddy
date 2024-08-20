@@ -32,7 +32,7 @@ Recent developments:
 2. Node-RED on the Raspberry Pi 5 has been successfully integrated with the Ollama API, allowing for:
    - Sending prompts to the Ollama server
    - Receiving and processing responses
-   - Correct URL configuration (http://192.168.8.60:11434/api/chat)
+   - Correct URL configuration (http://192.168.8.60:11434/api/generate)
    - Proper formatting of API requests
    - Handling and parsing of API responses
 
